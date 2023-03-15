@@ -1,17 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-
-export const fetchWorkouts = createAsyncThunk(
-  "workout/fetchWorkouts",
-  async () => {
-    const response = await fetch("http://localhost:5000/workouts");
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(`Error fetching workouts: ${response.status}`);
-    }
-    return data;
-  }
-);
 
 const workoutSlice = createSlice({
   name: "workout",
@@ -20,11 +7,10 @@ const workoutSlice = createSlice({
   },
   reducers: {
     addWorkout(state, action) {
-      const addedWorkout = action.payload;
-      state.workouts.push(addedWorkout);
+      state.workouts = action.payload;
     },
     removeWorkout(state, action) {
-      const removedWorkoutId = action.payload;
+      const removedWorkoutId = action.payload._id;
       state.workouts = state.workouts.filter(
         (workout) => workout._id !== removedWorkoutId
       );

@@ -58,6 +58,7 @@ header a {
   padding: 20px;
   position: relative;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 .workout-details h4 {
   margin: 0 0 10px 0;
@@ -130,4 +131,17 @@ div.error {
   color: var(--error);
   border-radius: 4px;
   margin: 20px 0;
+}
+.btn-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-remove:hover {
+  background-color: #e0dddd;
 }

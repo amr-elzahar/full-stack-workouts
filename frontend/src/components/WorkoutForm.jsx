@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { addWorkout } from "../store/workout-slice";
 
@@ -11,11 +11,15 @@ const WorkoutForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
+  const { workouts } = useSelector((state) => state.workout);
 
   const submitHandler = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
+      dispatch(
+        addWorkout([{ _id: Math.random(), title, reps, load }, ...workouts])
+      );
       const response = await fetch("http://localhost:5000/workouts", {
         method: "POST",
         headers: {
@@ -23,20 +27,11 @@ const WorkoutForm = () => {
         },
         body: JSON.stringify({ title, reps, load }),
       });
-
-      if (!response.ok) {
-        const errorMessage = `An error occurred: ${response.status}`;
-        setError(errorMessage);
-      }
-
-      const addedWorkout = await response.json();
       if (response.ok) {
         setError(null);
         setTitle("");
         setLoad("");
         setReps("");
-        console.log("new workout added:", addedWorkout);
-        dispatch(addWorkout(addedWorkout));
       }
     } catch (error) {
       setError(error.message);
@@ -71,13 +66,7 @@ const WorkoutForm = () => {
         />
 
         <button type="submit" disabled={isLoading}>
-          {isLoading ? (
-            <>
-              <p className="loading-spinner"></p>
-            </>
-          ) : (
-            "Add Workout"
-          )}
+          {isLoading ? <p className="loading-spinner"></p> : "Add Workout"}
         </button>
         {error && <div className="error">{error}</div>}
       </form>
