@@ -36,9 +36,11 @@ const Home = () => {
           </div>
         )}
         {error && <p>Failed to fetch data</p>}
-        {workouts.map((workout) => {
-          return <WorkoutDetails key={workout._id} details={workout} />;
-        })}
+        {workouts &&
+          workouts.length > 0 &&
+          workouts.map((workout) => (
+            <WorkoutDetails key={workout._id} details={workout} />
+          ))}
       </div>
       <WorkoutForm />
     </div>

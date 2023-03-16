@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 import { addWorkout } from "../store/workout-slice";
 
@@ -8,18 +9,13 @@ const WorkoutForm = () => {
   const [reps, setReps] = useState("");
   const [load, setLoad] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const { workouts } = useSelector((state) => state.workout);
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
     try {
-      dispatch(
-        addWorkout([{ _id: Math.random(), title, reps, load }, ...workouts])
-      );
+      dispatch(addWorkout({ _id: uuidv4(), title, reps, load }));
       const response = await fetch("http://localhost:5000/workouts", {
         method: "POST",
         headers: {
@@ -27,6 +23,11 @@ const WorkoutForm = () => {
         },
         body: JSON.stringify({ title, reps, load }),
       });
+
+      if (!response.ok) {
+        const errorMessage = `An error occured: ${response.status}`;
+        setError(errorMessage);
+      }
       if (response.ok) {
         setError(null);
         setTitle("");
@@ -35,42 +36,39 @@ const WorkoutForm = () => {
       }
     } catch (error) {
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
-    <>
-      <form className="create" onSubmit={submitHandler}>
-        <h3>Add a New Workout</h3>
+    <form className="create" onSubmit={submitHandler}>
+      <h3>Add a New Workout</h3>
 
-        <label>Excersize Title:</label>
-        <input
-          type="text"
-          onChange={(event) => setTitle(event.target.value)}
-          value={title}
-        />
+      <label>Excersice Title:</label>
+      <input
+        type="text"
+        onChange={(event) => setTitle(event.target.value)}
+        value={title}
+        required
+      />
 
-        <label>Load (in kg):</label>
-        <input
-          type="number"
-          onChange={(event) => setLoad(event.target.value)}
-          value={load}
-        />
+      <label>Load (in kg):</label>
+      <input
+        type="number"
+        onChange={(event) => setLoad(event.target.value)}
+        value={load}
+        required
+      />
 
-        <label>Number of Reps:</label>
-        <input
-          type="number"
-          onChange={(event) => setReps(event.target.value)}
-          value={reps}
-        />
+      <label>Number of Reps:</label>
+      <input
+        type="number"
+        onChange={(event) => setReps(event.target.value)}
+        value={reps}
+        required
+      />
 
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? <p className="loading-spinner"></p> : "Add Workout"}
-        </button>
-        {error && <div className="error">{error}</div>}
-      </form>
-    </>
+      <button type="submit">Add Workout</button>
+      {error && <div className="error">{error}</div>}
+    </form>
   );
 };
 

@@ -15,8 +15,11 @@ const workoutSlice = createSlice({
         (workout) => workout._id !== removedWorkoutId
       );
     },
+    editWorkout(state, action) {
+      state.workouts = action.payload;
+    },
   },
 });
 
 export default workoutSlice;
-export const { addWorkout, removeWorkout } = workoutSlice.actions;
+export const { addWorkout, removeWorkout, editWorkout } = workoutSlice.actions;

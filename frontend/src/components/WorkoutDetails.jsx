@@ -1,6 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaTrash } from "react-icons/fa";
+import { TbEdit } from "react-icons/tb";
 
 import { removeWorkout } from "../store/workout-slice";
 
@@ -25,9 +27,15 @@ const WorkoutDetails = ({ details }) => {
   return (
     <div className="workout-details">
       <button className="btn-remove" onClick={removeHandler}>
-        <FaTrash color="red" size={20} />
+        <FaTrash color="#ff0000" size={20} />
       </button>
-      <h4>{details.title}</h4>
+      <Link to={`/edit-workout/${details._id}`} className="btn-edit">
+        <TbEdit color="#00b7ff" size={20} />
+      </Link>
+
+      <Link to={`/workout/${details._id}`}>
+        <h4>{details.title}</h4>
+      </Link>
       <p>
         <strong>Load (kg): </strong> {details.load}
       </p>
