@@ -41,6 +41,8 @@ const Home = () => {
           workouts.map((workout) => (
             <WorkoutDetails key={workout._id} details={workout} />
           ))}
+
+        {workouts.length <= 0 && <p>No workouts yes!. Try to add more!</p>}
       </div>
       <WorkoutForm />
     </div>
